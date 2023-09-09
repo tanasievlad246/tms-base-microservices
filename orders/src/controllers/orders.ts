@@ -4,17 +4,7 @@ import { controller, httpGet, request, response, interfaces } from 'inversify-ex
 import { inject } from 'inversify';
 import { TYPES } from '../types';
 
-const testMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    console.log("middleware")
-    next();
-}
-
-const testMiddleware2 = (req: Request, res: Response, next: NextFunction) => {
-    console.log("middleware2")
-    next();
-}
-
-@controller("/orders", testMiddleware, testMiddleware2)
+@controller("/orders")
 export class OrdersController implements interfaces.Controller {
     constructor(@inject(TYPES.OrdersService) private ordersService: OrdersService) {
         this.ordersService = ordersService;
