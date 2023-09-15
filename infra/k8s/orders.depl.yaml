@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tms-orders-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tms-orders
+  template:
+    metadata:
+      labels:
+        app: tms-orders
+    spec:
+      containers:
+        - name: tms-orders
+          image: vlad246/tms-orders
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: ORDERS_DB_URI
+              value: 'mongodb://tms-orders-mongo-srv:27017/'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tms-orders-srv
+spec:
+  selector:
+    app: tms-orders
+  ports:
+    - name: tms-orders
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

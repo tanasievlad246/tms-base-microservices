@@ -1,14 +1,16 @@
-import { DataSource } from "typeorm";
-import { Order } from "./models/orders";
+import "reflect-metadata";
+import { DataSource } from 'typeorm';
 
-export const dataSource = new DataSource({
-    type: 'mysql',
-    host: 'localhost',
+const dataSource = new DataSource({
+    type: "mysql",
+    host: "mysql",
     port: 3306,
-    username: 'mysqluser',
-    password: 'password',
-    database: 'orders',
+    username: "root",
+    password: "root",
+    database: "default_db",
     synchronize: true,
     logging: true,
-    entities: [Order]
-})
+    entities: ['src/models/*.ts'],
+});
+
+export default dataSource;

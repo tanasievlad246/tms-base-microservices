@@ -1,14 +1,14 @@
-import 'reflect-metadata';
 import express, { Express, json } from 'express';
-import container from './containers';
-import { InversifyExpressServer, interfaces, TYPE } from "inversify-express-utils";
-
-import "./controllers/orders";
 
 const app: Express = express();
 
 app.use(json());
 
-const server = new InversifyExpressServer(container, null, { rootPath: "/api" }, app);
+app.all('*', (req, res) => {
+    res.status(404).send({
+        success: false,
+        message: 'Resource not found',
+    });
+});
 
-export const appConfigured = server.build();
+export default app;
