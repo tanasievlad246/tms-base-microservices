@@ -3,13 +3,17 @@ import { AddressService } from '../services/address';
 
 @injectable()
 export class AddressController {
-    constructor(@inject('AddressService') private addressService: AddressService) { }
+    private _addressService: AddressService;
+
+    constructor(@inject(AddressService) addressService: AddressService) {
+        this._addressService = addressService;
+     }
 
     public async getAddress(): Promise<string> {
-        return this.addressService.getAddress();
+        return this._addressService.getAddress();
     }
 
     public async createAddress(): Promise<string> {
-        return this.addressService.createAddress();
+        return this._addressService.createAddress();
     }
 }

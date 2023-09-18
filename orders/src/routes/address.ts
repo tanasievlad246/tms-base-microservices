@@ -3,7 +3,7 @@ import { container, types } from '../container';
 import { AddressController } from '../controllers/address';
 
 const router = Router();
-const addressController = container.get<AddressController>(types.AddressController);
+const addressController = container.get<AddressController>(AddressController);
 
 router.get('/address', addressController.getAddress);
 

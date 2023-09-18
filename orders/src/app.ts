@@ -1,5 +1,6 @@
 import express, { json } from 'express';
-import addressRouter from './src/routes/address';
+import addressRouter from './routes/address';
+import { container } from './container';
 
 const app = express();
 
