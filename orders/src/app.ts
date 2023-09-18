@@ -1,17 +1,12 @@
-import express, { json } from 'express';
-import addressRouter from './routes/address';
+import { json } from 'express';
 import { container } from './container';
+import { InversifyExpressServer } from 'inversify-express-utils';
 
-const app = express();
-
-app.use(json());
-
-app.use(addressRouter);
-
-app.all('*', (req, res) => {
-  res.status(404).send({
-    messaage: 'Not Found'
-  });
+const server = new InversifyExpressServer(container);
+server.setConfig((app) => {
+  app.use(json());
 });
+
+const app = server.build();
 
 export { app };
