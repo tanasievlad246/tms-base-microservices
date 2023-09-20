@@ -1,7 +1,5 @@
 import { DataSource } from "typeorm";
-import { injectable } from 'inversify';
 
-@injectable()
 export class TenantConnectionManager {
     connections: { [key: string]: DataSource };
     private static _instance: TenantConnectionManager;
@@ -23,7 +21,7 @@ export class TenantConnectionManager {
         });
     }
 
-    getInstance(): TenantConnectionManager {
+    static getInstance(): TenantConnectionManager {
         if (!TenantConnectionManager._instance) {
             TenantConnectionManager._instance = new TenantConnectionManager();
         }

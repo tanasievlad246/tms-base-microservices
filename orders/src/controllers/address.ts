@@ -1,9 +1,11 @@
 import { injectable, inject } from 'inversify';
 import { controller, httpGet, httpPost } from 'inversify-express-utils';
 import { AddressService } from '../services/address';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { TenantConnectionManager } from '../database/connectionManager';
 import { DataSource } from 'typeorm';
+import { types } from '../container';
+import DataSourceBindingMiddleware from '../middleware/dataSourceBinding';
 
 @controller('/address')
 export class AddressController {
@@ -14,7 +16,7 @@ export class AddressController {
     constructor(
         @inject(AddressService) addressService: AddressService,
         @inject(TenantConnectionManager) tenantConnectionManager: TenantConnectionManager,
-        @inject(DataSource) connection: DataSource
+        @inject(DataSource) connection: DataSource,
     ) {
         this._addressService = addressService;
         this._tenantConnectionManager = tenantConnectionManager;
@@ -48,5 +50,10 @@ export class AddressController {
         const connection = await this._tenantConnectionManager.getConnection(name);
         await connection.synchronize(false);
         return { message: 'Tenant created and synced!' };
+    }
+
+    @httpPost('/tenant-connection', DataSourceBindingMiddleware)
+    public async tenantConnectionQuery(req: Request): Promise<any> {
+        return this._addressService.tenantConnGetData();
     }
 }
