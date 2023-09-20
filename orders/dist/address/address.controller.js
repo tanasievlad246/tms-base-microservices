@@ -26,27 +26,6 @@ let AddressController = class AddressController {
     findAll() {
         return this.addressService.findAll();
     }
-    async createTenant(body) {
-        try {
-            return this.addressService.createSchema(body.schemaName);
-        }
-        catch (error) {
-            return {
-                message: error.message,
-            };
-        }
-    }
-    async syncSchema(body) {
-        try {
-            console.log(body);
-            return await this.addressService.syncSchema(body.schemaName);
-        }
-        catch (error) {
-            return {
-                message: error.message,
-            };
-        }
-    }
 };
 exports.AddressController = AddressController;
 __decorate([
@@ -62,20 +41,6 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AddressController.prototype, "findAll", null);
-__decorate([
-    (0, common_1.Post)('tenant'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], AddressController.prototype, "createTenant", null);
-__decorate([
-    (0, common_1.Post)('schema'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], AddressController.prototype, "syncSchema", null);
 exports.AddressController = AddressController = __decorate([
     (0, common_1.Controller)('address'),
     __metadata("design:paramtypes", [address_service_1.AddressService])

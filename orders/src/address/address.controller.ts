@@ -15,27 +15,4 @@ export class AddressController {
   findAll() {
     return this.addressService.findAll();
   }
-
-  @Post('tenant')
-  async createTenant(@Body() body: any) {
-    try {
-      return this.addressService.createSchema(body.schemaName);
-    } catch (error) {
-      return {
-        message: error.message,
-      };
-    }
-  }
-
-  @Post('schema')
-  async syncSchema(@Body() body: any) {
-    try {
-      console.log(body);
-      return await this.addressService.syncSchema(body.schemaName);
-    } catch (error) {
-      return {
-        message: error.message,
-      };
-    }
-  }
 }

@@ -8,33 +8,6 @@ import { Address } from './entities/address.entity';
 export class AddressService {
   constructor(private readonly dataSource: DataSource) {}
 
-  async createSchema(schemaName: string) {
-    try {
-      await this.dataSource.createQueryRunner().createSchema(schemaName, true);
-      return {
-        message: `Schema ${schemaName} created`,
-      };
-    } catch (error) {
-      return {
-        message: error.message,
-      };
-    }
-  }
-
-  async syncSchema(schemaName: string) {
-    try {
-      await this.dataSource.query(`SET search_path TO ${schemaName}`);
-      await this.dataSource.synchronize(false);
-      return {
-        message: `Schema ${schemaName} synchronized`,
-      };
-    } catch (error) {
-      return {
-        message: error.message,
-      };
-    }
-  }
-
   create(createAddressDto: CreateAddressDto) {
     return this.dataSource.getRepository(Address).create(createAddressDto);
   }

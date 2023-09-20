@@ -17,33 +17,6 @@ let AddressService = class AddressService {
     constructor(dataSource) {
         this.dataSource = dataSource;
     }
-    async createSchema(schemaName) {
-        try {
-            await this.dataSource.createQueryRunner().createSchema(schemaName, true);
-            return {
-                message: `Schema ${schemaName} created`,
-            };
-        }
-        catch (error) {
-            return {
-                message: error.message,
-            };
-        }
-    }
-    async syncSchema(schemaName) {
-        try {
-            await this.dataSource.query(`SET search_path TO ${schemaName}`);
-            await this.dataSource.synchronize(false);
-            return {
-                message: `Schema ${schemaName} synchronized`,
-            };
-        }
-        catch (error) {
-            return {
-                message: error.message,
-            };
-        }
-    }
     create(createAddressDto) {
         return this.dataSource.getRepository(address_entity_1.Address).create(createAddressDto);
     }
