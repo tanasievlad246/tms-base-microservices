@@ -1,1 +1,1 @@
-{"version":3,"file":"create-business-partner.dto.js","sourceRoot":"","sources":["../../../src/business-partner/dto/create-business-partner.dto.ts"],"names":[],"mappings":";;;AAAA,MAAa,wBAAwB;CAAG;AAAxC,4DAAwC"}
+{"version":3,"file":"create-business-partner.dto.js","sourceRoot":"","sources":["../../../src/business-partner/dto/create-business-partner.dto.ts"],"names":[],"mappings":";;;AAEA,MAAa,wBAAwB;CAWpC;AAXD,4DAWC"}
