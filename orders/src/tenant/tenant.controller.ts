@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
 import { TenantService } from './tenant.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
@@ -9,26 +9,46 @@ export class TenantController {
 
   @Post()
   create(@Body() createTenantDto: CreateTenantDto) {
-    return this.tenantService.create(createTenantDto);
+    try {
+      return {
+        tenant: this.tenantService.create(createTenantDto),
+        success: true,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error,
+      };
+    }
   }
 
   @Get()
   findAll() {
-    return this.tenantService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tenantService.findOne(+id);
+    try {
+      return {
+        items: this.tenantService.findAll(),
+        success: true,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error,
+      };
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTenantDto: UpdateTenantDto) {
-    return this.tenantService.update(+id, updateTenantDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tenantService.remove(+id);
+  update(@Param('id') id: number, @Body() updateTenantDto: UpdateTenantDto) {
+    try {
+      return {
+        tenant: this.tenantService.update(id, updateTenantDto),
+        success: true,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error,
+      };
+    }
   }
 }

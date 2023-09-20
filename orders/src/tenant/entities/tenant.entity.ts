@@ -1,6 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity()
+@Entity({
+  schema: 'default_db',
+  name: 'tenants',
+})
 export class Tenant {
   @PrimaryGeneratedColumn()
   id: number;

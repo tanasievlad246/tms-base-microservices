@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { BusinessPartnerService } from './business-partner.service';
 import { CreateBusinessPartnerDto } from './dto/create-business-partner.dto';
 import { UpdateBusinessPartnerDto } from './dto/update-business-partner.dto';
 
 @Controller('business-partner')
 export class BusinessPartnerController {
-  constructor(private readonly businessPartnerService: BusinessPartnerService) {}
+  constructor(
+    private readonly businessPartnerService: BusinessPartnerService,
+  ) {}
 
   @Post()
   create(@Body() createBusinessPartnerDto: CreateBusinessPartnerDto) {
@@ -23,7 +33,10 @@ export class BusinessPartnerController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBusinessPartnerDto: UpdateBusinessPartnerDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateBusinessPartnerDto: UpdateBusinessPartnerDto,
+  ) {
     return this.businessPartnerService.update(+id, updateBusinessPartnerDto);
   }
 

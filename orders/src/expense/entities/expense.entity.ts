@@ -1,4 +1,5 @@
-import { PrimaryGeneratedColumn, Entity, Column } from 'typeorm';
+import { Vehicle } from 'src/vehicle/entities/vehicle.entity';
+import { PrimaryGeneratedColumn, Entity, Column, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Expense {
@@ -16,4 +17,7 @@ export class Expense {
 
   @Column()
   invoiceNumber: string;
+
+  @ManyToOne(() => Vehicle, (vehicle) => vehicle.expenses)
+  vehicle: Vehicle;
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AddressModule } from './address/address.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TenantModule } from './tenant/tenant.module';
@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { ParcelModule } from './parcel/parcel.module';
 import { BusinessPartnerModule } from './business-partner/business-partner.module';
 
+import { TenantQueryMiddleware } from './middleware/tenantQueryMiddleware';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -32,4 +33,10 @@ import { BusinessPartnerModule } from './business-partner/business-partner.modul
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(TenantQueryMiddleware)
+      .forRoutes('address', 'business-partner');
+  }
+}

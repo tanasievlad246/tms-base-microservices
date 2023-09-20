@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Order } from 'src/order/entities/order.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Parcel {
@@ -22,4 +23,7 @@ export class Parcel {
 
   @Column()
   type: string;
+
+  @ManyToOne(() => Order, (order) => order.goods)
+  order: Order;
 }
