@@ -4,6 +4,7 @@ WORKDIR /app
 COPY package.json .
 RUN npm install --omit=dev
 RUN npm i --save-dev @types/bcrypt
-COPY dist .
+COPY . .
+RUN npm run typeorm:run-migrations || true
 
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:dev"]

@@ -25,7 +25,7 @@ export class AddressService {
   }
 
   findAll() {
-    return `This action returns all address`;
+    return `This returns all address`;
   }
 
   findOne(id: number) {
