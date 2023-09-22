@@ -57,4 +57,11 @@ export class Order {
 
   @Column()
   status: string;
+
+  @Column({
+    type: 'text',
+    default: () => "current_setting('hermestms.current_tenant')::text",
+    nullable: false,
+  })
+  tenantId: string;
 }

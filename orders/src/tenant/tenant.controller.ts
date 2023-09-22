@@ -2,16 +2,21 @@ import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
 import { TenantService } from './tenant.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
+import { DataSource } from 'typeorm';
+import { Tenant } from './entities/tenant.entity';
 
 @Controller('tenant')
 export class TenantController {
-  constructor(private readonly tenantService: TenantService) {}
+  constructor(
+    private readonly tenantService: TenantService,
+    private readonly dataSource: DataSource,
+  ) {}
 
   @Post()
-  create(@Body() createTenantDto: CreateTenantDto) {
+  async create(@Body() createTenantDto: CreateTenantDto) {
     try {
       return {
-        tenant: this.tenantService.create(createTenantDto),
+        tenant: await this.tenantService.create(createTenantDto),
         success: true,
       };
     } catch (error) {
@@ -23,12 +28,16 @@ export class TenantController {
   }
 
   @Get()
-  findAll() {
+  async findAll(@Body() body: { tenantName: string }) {
     try {
-      return {
-        items: this.tenantService.findAll(),
-        success: true,
-      };
+      return await this.dataSource.transaction(async (manager) => {
+        const repo = manager.getRepository(Tenant);
+        await this.tenantService.setCurrentTenantOnRepository(
+          repo,
+          body.tenantName,
+        );
+        return repo.find();
+      });
     } catch (error) {
       return {
         success: false,

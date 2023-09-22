@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AddressModule } from './address/address.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TenantModule } from './tenant/tenant.module';
@@ -8,19 +8,11 @@ import { OrderModule } from './order/order.module';
 import { UserModule } from './user/user.module';
 import { ParcelModule } from './parcel/parcel.module';
 import { BusinessPartnerModule } from './business-partner/business-partner.module';
+import { config } from '../typeOrm.config';
 
-import { TenantQueryMiddleware } from './middleware/tenantQueryMiddleware';
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'password',
-      logging: true,
-      entities: ['dist/**/*.entity.{ts,js}'],
-    }),
+    TypeOrmModule.forRoot(config),
     AddressModule,
     TenantModule,
     VehicleModule,
@@ -34,9 +26,6 @@ import { TenantQueryMiddleware } from './middleware/tenantQueryMiddleware';
   providers: [],
 })
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(TenantQueryMiddleware)
-      .forRoutes('address', 'business-partner');
-  }
+  // constructor(private dataSource: DataSource) {}
+  // configure(consumer: MiddlewareConsumer) {}
 }

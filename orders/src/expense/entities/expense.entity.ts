@@ -20,4 +20,11 @@ export class Expense {
 
   @ManyToOne(() => Vehicle, (vehicle) => vehicle.expenses)
   vehicle: Vehicle;
+
+  @Column({
+    type: 'text',
+    default: () => "current_setting('hermestms.current_tenant')::text",
+    nullable: false,
+  })
+  tenantId: string;
 }

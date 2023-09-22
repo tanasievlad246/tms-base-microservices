@@ -12,14 +12,17 @@ export class TenantConnectionManager {
 
   createConnection(tenantName: string): DataSource {
     return (this.connections[tenantName] = new DataSource({
-      type: 'mysql',
+      type: 'postgres',
       host: 'localhost',
-      port: 3306,
-      username: 'mysqluser',
+      port: 5432,
+      username: 'postgres',
       password: 'password',
-      database: tenantName,
+      database: 'tms2',
+      schema: tenantName,
+      dropSchema: false,
       logging: true,
-      entities: ['dist/models/**/*.ts'],
+      entities: ['dist/**/*.entity.{ts,js}'],
+      migrations: ['dist/migrations/*.{ts,js}'],
     }));
   }
 
@@ -45,11 +48,24 @@ export class TenantConnectionManager {
   syncSchema(tenantName: string): Promise<void> {
     try {
       if (this.connections[tenantName]) {
+        this.connections[tenantName].query(`SET search_path TO ${tenantName}`);
         this.connections[tenantName].synchronize(false);
         return Promise.resolve();
       }
 
       return Promise.reject('No tennant found');
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  closeConnection(tenantName: string): Promise<void> {
+    try {
+      if (this.connections[tenantName]) {
+        this.connections[tenantName].destroy();
+        delete this.connections[tenantName];
+        return Promise.resolve();
+      }
     } catch (error) {
       return Promise.reject(error);
     }

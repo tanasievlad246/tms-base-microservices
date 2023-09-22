@@ -5,10 +5,10 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 100 })
+  @Column()
   name: string;
 
-  @Column({ length: 100 })
+  @Column()
   email: string;
 
   @Column()
@@ -19,4 +19,11 @@ export class User {
 
   @Column()
   type: string;
+
+  @Column({
+    type: 'text',
+    default: () => "current_setting('hermestms.current_tenant')::text",
+    nullable: false,
+  })
+  tenantId: string;
 }

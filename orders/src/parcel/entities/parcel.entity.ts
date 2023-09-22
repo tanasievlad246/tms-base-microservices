@@ -26,4 +26,11 @@ export class Parcel {
 
   @ManyToOne(() => Order, (order) => order.goods)
   order: Order;
+
+  @Column({
+    type: 'text',
+    default: () => "current_setting('hermestms.current_tenant')::text",
+    nullable: false,
+  })
+  tenantId: string;
 }

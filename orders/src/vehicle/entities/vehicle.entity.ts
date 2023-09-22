@@ -13,31 +13,31 @@ export class Vehicle {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 100 })
+  @Column()
   vin: string;
 
-  @Column({ length: 100 })
+  @Column()
   make: string;
 
-  @Column({ length: 100 })
+  @Column()
   model: string;
 
-  @Column({ length: 100 })
+  @Column()
   year: string;
 
-  @Column({ length: 100 })
+  @Column()
   km: number;
 
-  @Column({ length: 100 })
+  @Column()
   color: string;
 
-  @Column({ length: 100 })
+  @Column()
   registration: string;
 
-  @Column({ length: 100 })
+  @Column()
   registrationDate: Date;
 
-  @Column({ length: 100 })
+  @Column()
   country: string;
 
   @OneToMany(() => Expense, (expense) => expense.vehicle)
@@ -46,4 +46,11 @@ export class Vehicle {
   @OneToOne(() => Vehicle)
   @JoinColumn()
   trailer: Vehicle;
+
+  @Column({
+    type: 'text',
+    default: () => "current_setting('hermestms.current_tenant')::text",
+    nullable: false,
+  })
+  tenantId: string;
 }

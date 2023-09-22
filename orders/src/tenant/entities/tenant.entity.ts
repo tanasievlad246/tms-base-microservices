@@ -1,8 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity({
-  schema: 'default_db',
+  schema: 'public',
   name: 'tenants',
+  synchronize: true,
 })
 export class Tenant {
   @PrimaryGeneratedColumn()
@@ -20,6 +21,15 @@ export class Tenant {
   @Column()
   subscription: string;
 
-  @Column()
+  @Column({
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   renewalDate: Date;
+
+  @Column({
+    type: 'text',
+    default: () => "current_setting('hermestms.current_tenant')::text",
+    nullable: false,
+  })
+  tenantId: string;
 }
