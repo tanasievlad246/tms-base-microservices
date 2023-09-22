@@ -1,56 +1,62 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql-deployment
+  name: postgres-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql
+      app: postgres
   template:
     metadata:
       labels:
-        app: mysql
+        app: postgres
     spec:
       containers:
-        - name: mysql
-          image: mysql:5.6
+        - name: postgres
+          image: postgres:13
           env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: root
+            - name: POSTGRES_USER
+              value: postgress
+            - name: POSTGRES_PASSWORD
+              value: postgress
+            - name: POSTGRES_DB
+              value: tms2
           ports:
-            - containerPort: 3306
-              name: mysql
+            - containerPort: 5432
+              name: postgres
           volumeMounts:
-            - name: mysql-init
+            - name: postgres-init
               mountPath: /docker-entrypoint-initdb.d
-            - name: mysql-data
-              mountPath: /var/lib/mysql
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
       volumes:
-        - name: mysql-init
+        - name: postgres-init
           configMap:
-            name: mysql-config
-        - name: mysql-data
+            name: postgres-config
+        - name: postgres-data
           emptyDir: {}
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql
+  name: postgres
 spec:
   selector:
-    app: mysql
+    app: postgres
   ports:
-    - name: mysql
+    - name: postgres
       protocol: TCP
-      port: 3306
-      targetPort: 3306
+      port: 5432
+      targetPort: 5432
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mysql-config
+  name: postgres-config
 data:
   init.sql: |
-    CREATE DATABASE IF NOT EXISTS default_db;
+    CREATE DATABASE IF NOT EXISTS tms2;
+    CREATE USER hermestms WITH LOGIN PASSWORD 'hermestmspw';
+    GRANT ALL PRIVILEGES ON DATABASE tms2 to hermestms;

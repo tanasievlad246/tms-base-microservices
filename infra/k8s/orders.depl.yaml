@@ -21,8 +21,6 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
-            - name: ORDERS_DB_URI
-              value: 'mongodb://tms-orders-mongo-srv:27017/'
 ---
 apiVersion: v1
 kind: Service
