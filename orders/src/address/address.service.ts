@@ -3,13 +3,25 @@ import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { DataSource } from 'typeorm';
 import { Address } from './entities/address.entity';
+import { TenantService } from 'src/tenant/tenant.service';
 
 @Injectable()
 export class AddressService {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly tenantService: TenantService,
+  ) {}
 
-  create(createAddressDto: CreateAddressDto) {
-    return this.dataSource.getRepository(Address).create(createAddressDto);
+  async create(createAddressDto: CreateAddressDto) {
+    return await this.dataSource.transaction(async (manager) => {
+      const repo = manager.getRepository(Address);
+      await this.tenantService.setCurrentTenantOnRepository(
+        repo,
+        createAddressDto.tenantId,
+      );
+      const address = repo.create(createAddressDto);
+      return await repo.save(address);
+    });
   }
 
   findAll() {

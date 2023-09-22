@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AddressService } from './address.service';
 import { AddressController } from './address.controller';
-import { DatabaseService } from 'src/database/databaseService';
-import { TenantConnectionManager } from 'src/database/connectionManager';
+import { TenantService } from 'src/tenant/tenant.service';
+import { TenantModule } from 'src/tenant/tenant.module';
 
 @Module({
   controllers: [AddressController],
-  providers: [AddressService, DatabaseService, TenantConnectionManager],
+  providers: [AddressService, TenantService],
+  imports: [TenantModule],
 })
 export class AddressModule {}
