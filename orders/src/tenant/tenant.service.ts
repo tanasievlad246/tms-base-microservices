@@ -14,17 +14,19 @@ export class TenantService {
   ) {}
   async create(createTenantDto: CreateTenantDto) {
     try {
-      const tenant = await this.createTenant(createTenantDto);
-      return tenant;
+      return await this.dataSource.transaction(async (manager) => {
+        const repo = manager.getRepository(Tenant);
+        await this.setCurrentTenantOnRepository(
+          repo,
+          createTenantDto.subdomain,
+        );
+        const tenant = repo.create(createTenantDto);
+        return await repo.save(tenant);
+      });
     } catch (error) {
       console.log(error);
       throw new Error(error);
     }
-  }
-
-  private async createTenant(createTenantDto: CreateTenantDto) {
-    const tenant = this.tenantRepository.create(createTenantDto);
-    return await this.tenantRepository.save(tenant);
   }
 
   async update(id: number, updateTenantDto: UpdateTenantDto) {
@@ -40,17 +42,23 @@ export class TenantService {
   ): Promise<void> {
     console.log(tenantName);
     const r = await repository.query(
-      `SET LOCAL postgres.current_tenant='${tenantName}'`,
+      `SET LOCAL hermestms.current_tenant='${tenantName}'`,
       [],
     );
     console.log('after set repo', r);
   }
 
   async findAll(tenantName: string) {
-    this.dataSource.query(
-      `SET LOCAL postgres.current_tenant = '${tenantName}'`,
-    );
-    const tenantsRepo = this.dataSource.getRepository(Tenant);
-    return tenantsRepo.find();
+    try {
+      return this.dataSource.transaction(async (manager) => {
+        const repo = manager.getRepository(Tenant);
+        await this.setCurrentTenantOnRepository(repo, tenantName);
+        const tenants = await repo.find();
+        return tenants;
+      });
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
   }
 }

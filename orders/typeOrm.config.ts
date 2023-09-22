@@ -8,7 +8,6 @@ export const config: DataSourceOptions = {
   password: 'hermestmspw',
   database: 'tms2',
   logging: true,
-  migrationsRun: true,
   entities: ['dist/**/*.entity.{ts,js}'],
   migrations: ['dist/migrations/*.{ts,js}'],
 };

@@ -4,4 +4,5 @@ export class CreateTenantDto {
   subscribed: boolean;
   subscription: string;
   renewalDate: Date;
+  tenantId: string;
 }

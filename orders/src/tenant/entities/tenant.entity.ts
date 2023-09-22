@@ -3,7 +3,6 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity({
   schema: 'public',
   name: 'tenants',
-  synchronize: true,
 })
 export class Tenant {
   @PrimaryGeneratedColumn()
