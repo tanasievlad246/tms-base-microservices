@@ -24,8 +24,12 @@ export class AddressService {
     });
   }
 
-  findAll() {
-    return `This returns all address`;
+  async findAll(tenantId: string) {
+    return await this.dataSource.transaction(async (manager) => {
+      const repo = manager.getRepository(Address);
+      await this.tenantService.setCurrentTenantOnRepository(repo, tenantId);
+      return await repo.find();
+    });
   }
 
   findOne(id: number) {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Request } from '@nestjs/common';
 import { AddressService } from './address.service';
 import { CreateAddressDto } from './dto/create-address.dto';
 
@@ -12,7 +12,8 @@ export class AddressController {
   }
 
   @Get()
-  findAll() {
-    return this.addressService.findAll();
+  findAll(@Request() req: Request) {
+    const tenantId = req.headers['x-tenant-id'] as string;
+    return this.addressService.findAll(tenantId);
   }
 }

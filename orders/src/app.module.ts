@@ -8,11 +8,20 @@ import { OrderModule } from './order/order.module';
 import { UserModule } from './user/user.module';
 import { ParcelModule } from './parcel/parcel.module';
 import { BusinessPartnerModule } from './business-partner/business-partner.module';
-import { config } from '../typeOrm.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(config),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'postgres',
+      port: 5432,
+      username: 'hermestms',
+      password: 'hermestmspw',
+      database: 'tms2',
+      logging: true,
+      entities: ['dist/**/*.entity.{ts,js}'],
+      migrations: ['dist/migrations/*.{ts,js}'],
+    }),
     AddressModule,
     TenantModule,
     VehicleModule,
