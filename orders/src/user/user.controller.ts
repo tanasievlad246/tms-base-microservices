@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Headers, Res } from '@nestjs/common';
+import { Controller, Post, Body, Headers, Res, Get } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Response } from 'express';
@@ -22,6 +22,9 @@ export class UserController {
     const { password, email } = newUser;
     const token = this.userService.signIn(email, password);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...createdUser } = newUser;
+
     res
       .cookie('jwt', token, {
         httpOnly: true,
@@ -29,10 +32,11 @@ export class UserController {
         sameSite: 'lax',
         expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
       })
-      .send({ status: 'ok' });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...createdUser } = newUser;
+      .send(createdUser);
+  }
 
-    return createdUser;
+  @Get('isalive')
+  isalive() {
+    return { status: 'ok' };
   }
 }

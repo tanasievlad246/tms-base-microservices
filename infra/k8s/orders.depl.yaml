@@ -21,6 +21,9 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
+          envFrom:
+            - secretRef:
+                name: database-secrets
 ---
 apiVersion: v1
 kind: Service
