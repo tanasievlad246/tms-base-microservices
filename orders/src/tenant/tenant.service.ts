@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTenantDto } from './dto/create-tenant.dto';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { Tenant } from './entities/tenant.entity';
 
 @Injectable()
@@ -33,6 +33,18 @@ export class TenantService {
       [],
     );
     console.log('after set repo', r);
+  }
+
+  async setCurrentTenantOnQueryRunner(
+    queryRunner: QueryRunner,
+    tenantName: string,
+  ): Promise<void> {
+    console.log(tenantName);
+    const r = await queryRunner.query(
+      `SET LOCAL hermestms.current_tenant='${tenantName}'`,
+      [],
+    );
+    console.log('after set query runner', r);
   }
 
   async findAll(tenantName: string) {

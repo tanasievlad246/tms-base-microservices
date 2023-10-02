@@ -21,6 +21,11 @@ export class User {
   type: string;
 
   @Column({
+    nullable: false,
+  })
+  password: string;
+
+  @Column({
     type: 'text',
     default: () => "current_setting('hermestms.current_tenant')::text",
     nullable: false,

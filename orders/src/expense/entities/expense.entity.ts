@@ -18,6 +18,9 @@ export class Expense {
   @Column()
   invoiceNumber: string;
 
+  @Column()
+  status: string;
+
   @ManyToOne(() => Vehicle, (vehicle) => vehicle.expenses)
   vehicle: Vehicle;
 

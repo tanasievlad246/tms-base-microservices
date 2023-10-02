@@ -8,6 +8,7 @@ import { OrderModule } from './order/order.module';
 import { UserModule } from './user/user.module';
 import { ParcelModule } from './parcel/parcel.module';
 import { BusinessPartnerModule } from './business-partner/business-partner.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -21,6 +22,11 @@ import { BusinessPartnerModule } from './business-partner/business-partner.modul
       logging: true,
       entities: ['dist/**/*.entity.{ts,js}'],
       migrations: ['dist/migrations/*.{ts,js}'],
+    }),
+    JwtModule.register({
+      global: true,
+      secret: 'secret',
+      signOptions: { expiresIn: '1d' },
     }),
     AddressModule,
     TenantModule,
