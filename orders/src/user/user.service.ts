@@ -40,11 +40,12 @@ export class UserService {
     });
   }
 
-  async signIn(email: string, password: string) {
+  async signIn(email: string, password: string, tenantId: string) {
     // generate token
     // return token as http cookie
     return await this.dataSource.transaction(async (manager) => {
       const userRepo = manager.getRepository(User);
+      await this.tenantService.setCurrentTenantOnRepository(userRepo, tenantId);
       const user = await userRepo.findOneBy({ email });
       if (!user) {
         throw new Error('User not found');

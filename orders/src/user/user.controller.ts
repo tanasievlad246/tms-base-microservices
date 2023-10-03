@@ -10,17 +10,18 @@ export class UserController {
   @Post('signup')
   async signUp(
     @Body() createUserDto: CreateUserDto,
-    @Headers('origin') origin: string,
+    @Headers('host') host: string,
     @Res({ passthrough: true }) res: Response,
   ) {
     // check if user already exists
     // if user exists, throw error with status code 400
     // if user does not exist, create user
-    console.log(origin);
+    const tenantId = host.split('.')[0];
+    console.log(tenantId);
 
-    const newUser = await this.userService.create(createUserDto, origin);
+    const newUser = await this.userService.create(createUserDto, tenantId);
     const { password, email } = newUser;
-    const token = this.userService.signIn(email, password);
+    const token = await this.userService.signIn(email, password, tenantId);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...createdUser } = newUser;
