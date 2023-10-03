@@ -1,7 +1,18 @@
-import { Controller, Post, Body, Headers, Res, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Res,
+  Req,
+  Get,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Response } from 'express';
+import { Response, Request } from 'express';
+import { LoginUserDto } from './dto/login-user.dto';
+import { AuthGuardGuard } from 'src/auth-guard/auth-guard.guard';
+import { UserPayload } from 'src/types/express';
 
 @Controller('user')
 export class UserController {
@@ -10,14 +21,10 @@ export class UserController {
   @Post('signup')
   async signUp(
     @Body() createUserDto: CreateUserDto,
-    @Headers('host') host: string,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    // check if user already exists
-    // if user exists, throw error with status code 400
-    // if user does not exist, create user
-    const tenantId = host.split('.')[0];
-    console.log(tenantId);
+    const tenantId = req.tenantId;
 
     const newUser = await this.userService.create(createUserDto, tenantId);
     const { password, email } = newUser;
@@ -31,13 +38,40 @@ export class UserController {
         httpOnly: true,
         secure: false,
         sameSite: 'lax',
-        expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+        expires: new Date(Date.now() + 1 * 24 * 60 * 1000), // 1 day
       })
       .send(createdUser);
   }
 
-  @Get('isalive')
-  isalive() {
-    return { status: 'ok' };
+  @Post('signin')
+  async signIn(
+    @Body() loginUserDto: LoginUserDto,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { email, password } = loginUserDto;
+    const tenantId = req.tenantId;
+
+    const token = await this.userService.signIn(email, password, tenantId);
+
+    res
+      .cookie('jwt', token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+        expires: new Date(Date.now() + 1 * 24 * 60 * 1000), // 1 day
+      })
+      .send();
+  }
+
+  @Post('signout')
+  async signOut(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('jwt').send();
+  }
+
+  @Get('me')
+  @UseGuards(AuthGuardGuard)
+  getMe(@Req() req: Request): UserPayload {
+    return req.user;
   }
 }

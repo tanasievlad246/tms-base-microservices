@@ -47,6 +47,7 @@ export class UserService {
       const userRepo = manager.getRepository(User);
       await this.tenantService.setCurrentTenantOnRepository(userRepo, tenantId);
       const user = await userRepo.findOneBy({ email });
+
       if (!user) {
         throw new Error('User not found');
       }
