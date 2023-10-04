@@ -7,7 +7,19 @@ export class Address {
   id: number;
 
   @Column()
-  street: string;
+  country: string;
+
+  @Column()
+  city: string;
+
+  @Column()
+  dock: string;
+
+  @Column()
+  zip: string;
+
+  @Column()
+  coords: string;
 
   @ManyToOne(() => Order, (order) => order.id)
   order: Order;

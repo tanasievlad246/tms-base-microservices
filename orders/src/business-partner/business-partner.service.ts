@@ -1,26 +1,92 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBusinessPartnerDto } from './dto/create-business-partner.dto';
 import { UpdateBusinessPartnerDto } from './dto/update-business-partner.dto';
+import { DataSource, Repository } from 'typeorm';
+import { TenantService } from 'src/tenant/tenant.service';
+import { BusinessPartner } from './entities/business-partner.entity';
+import { Address } from 'src/address/entities/address.entity';
 
 @Injectable()
 export class BusinessPartnerService {
-  create(createBusinessPartnerDto: CreateBusinessPartnerDto) {
-    return 'This action adds a new businessPartner';
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly tenantService: TenantService,
+  ) {}
+
+  async create(
+    createBusinessPartnerDto: CreateBusinessPartnerDto,
+    tenantId: string,
+  ) {
+    return await this.dataSource.transaction(async (manager) => {
+      const repo = manager.getRepository(BusinessPartner);
+      const addressRepo = manager.getRepository(Address);
+
+      await this.tenantService.setCurrentTenantOnRepository(repo, tenantId);
+      await this.tenantService.setCurrentTenantOnRepository(
+        addressRepo,
+        tenantId,
+      );
+
+      const address = await addressRepo.findOneBy(
+        createBusinessPartnerDto.address,
+      );
+
+      const businessPartner = repo.create(createBusinessPartnerDto);
+      businessPartner.address = address;
+
+      return await repo.save(businessPartner);
+    });
   }
 
-  findAll() {
-    return `This action returns all businessPartner`;
+  async findAll(tenantId: string) {
+    return await this.dataSource.transaction(async (manager) => {
+      const repo = manager.getRepository(BusinessPartner);
+      await this.tenantService.setCurrentTenantOnRepository(repo, tenantId);
+      return await repo.find({
+        relations: ['address'],
+      });
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} businessPartner`;
+  async findOne(id: number, tenantId: string) {
+    return await this.dataSource.transaction(async (manager) => {
+      const repo = await manager.getRepository(BusinessPartner);
+      await this.tenantService.setCurrentTenantOnRepository(repo, tenantId);
+      return await repo.findOne({
+        where: { id },
+        relations: ['address'],
+      });
+    });
   }
 
-  update(id: number, updateBusinessPartnerDto: UpdateBusinessPartnerDto) {
-    return `This action updates a #${id} businessPartner`;
+  async update(
+    id: number,
+    updateBusinessPartnerDto: UpdateBusinessPartnerDto,
+    tenantId: string,
+  ) {
+    return await this.dataSource.transaction(async (manager) => {
+      const repo: Repository<BusinessPartner> =
+        manager.getRepository(BusinessPartner);
+      await this.tenantService.setCurrentTenantOnRepository(repo, tenantId);
+      const businessPartner = await repo.findOne({
+        where: { id },
+      });
+      const updatedBusinessPartner = repo.merge(
+        businessPartner,
+        updateBusinessPartnerDto,
+      );
+      repo.save(updatedBusinessPartner);
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} businessPartner`;
+  async remove(id: number, tenantId: string) {
+    return await this.dataSource.transaction(async (manager) => {
+      const repo: Repository<BusinessPartner> =
+        manager.getRepository(BusinessPartner);
+      await this.tenantService.setCurrentTenantOnRepository(repo, tenantId);
+
+      const businessPartner = await repo.delete(id);
+      return businessPartner;
+    });
   }
 }

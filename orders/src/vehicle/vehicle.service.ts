@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
+import { Vehicle } from './entities/vehicle.entity';
 
 @Injectable()
 export class VehicleService {
@@ -12,7 +13,7 @@ export class VehicleService {
     return `This action returns all vehicle`;
   }
 
-  findOne(id: number) {
+  async findOne(id: number, tenantId: string): Promise<Vehicle> {
     return `This action returns a #${id} vehicle`;
   }
 

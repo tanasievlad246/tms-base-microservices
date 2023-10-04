@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateParcelDto } from './dto/create-parcel.dto';
 import { UpdateParcelDto } from './dto/update-parcel.dto';
+import { Parcel } from './entities/parcel.entity';
 
 @Injectable()
 export class ParcelService {
@@ -9,6 +10,10 @@ export class ParcelService {
   }
 
   findAll() {
+    return `This action returns all parcel`;
+  }
+
+  async findManyByIds(ids: number[], tenantId: string): Promise<Parcel[]> {
     return `This action returns all parcel`;
   }
 

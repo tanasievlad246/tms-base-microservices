@@ -11,8 +11,8 @@ export class AddressController {
   @Post()
   @UseGuards(AuthGuardGuard)
   create(@Body() createAddressDto: CreateAddressDto, @Req() req: Request) {
-    createAddressDto.tenantId = req.user.tenantId;
-    return this.addressService.create(createAddressDto);
+    const tenantId = req.user.tenantId;
+    return this.addressService.create(createAddressDto, tenantId);
   }
 
   @Get()

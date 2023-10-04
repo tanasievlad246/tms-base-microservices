@@ -71,3 +71,16 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+---
+
+# Creating new entities
+All new entities that are tenanted need to contain a column of tenantId as below:
+```
+@Column({
+    type: 'text',
+    default: () => "current_setting('hermestms.current_tenant')::text",
+    nullable: false,
+  })
+  tenantId: string;
+```

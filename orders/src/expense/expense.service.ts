@@ -1,26 +1,59 @@
 import { Injectable } from '@nestjs/common';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
+import { DataSource, Repository } from 'typeorm';
+import { TenantService } from 'src/tenant/tenant.service';
+import { Expense } from './entities/expense.entity';
 
 @Injectable()
 export class ExpenseService {
-  create(createExpenseDto: CreateExpenseDto) {
-    return 'This action adds a new expense';
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly tenantService: TenantService,
+  ) {}
+
+  async create(createExpenseDto: CreateExpenseDto, tenantId: string) {
+    return await this.dataSource.transaction(async (manager) => {
+      const repo: Repository<Expense> = manager.getRepository(Expense);
+      await this.tenantService.setCurrentTenantOnRepository(repo, tenantId);
+      return await repo.save(createExpenseDto);
+    });
   }
 
-  findAll() {
-    return `This action returns all expense`;
+  async findAll(tenantId: string) {
+    return await this.dataSource.transaction(async (manager) => {
+      const repo: Repository<Expense> = manager.getRepository(Expense);
+      await this.tenantService.setCurrentTenantOnRepository(repo, tenantId);
+      return await repo.find();
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} expense`;
+  async findOne(id: number, tenantId: string) {
+    return await this.dataSource.transaction(async (manager) => {
+      const repo: Repository<Expense> = manager.getRepository(Expense);
+      await this.tenantService.setCurrentTenantOnRepository(repo, tenantId);
+      return await repo.findOneBy({ id });
+    });
   }
 
-  update(id: number, updateExpenseDto: UpdateExpenseDto) {
-    return `This action updates a #${id} expense`;
+  async update(
+    id: number,
+    updateExpenseDto: UpdateExpenseDto,
+    tenantId: string,
+  ) {
+    return await this.dataSource.transaction(async (manager) => {
+      const repo: Repository<Expense> = manager.getRepository(Expense);
+      await this.tenantService.setCurrentTenantOnRepository(repo, tenantId);
+      const expense = await repo.findOneBy({ id });
+      return await repo.save({ ...expense, ...updateExpenseDto });
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} expense`;
+  async remove(id: number, tenantId: string) {
+    return await this.dataSource.transaction(async (manager) => {
+      const repo: Repository<Expense> = manager.getRepository(Expense);
+      await this.tenantService.setCurrentTenantOnRepository(repo, tenantId);
+      return await repo.delete(id);
+    });
   }
 }
