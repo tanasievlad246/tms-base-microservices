@@ -1,6 +1,6 @@
 import { IsArray, IsDate, IsNotEmpty, IsNumber } from 'class-validator';
 import { Parcel } from 'src/parcel/entities/parcel.entity';
-import { Address } from 'src/address/entities/address.entity';
+import { Operation } from 'src/operation/entities/operation.entity';
 
 export class CreateOrderDto {
   @IsNumber()
@@ -11,10 +11,10 @@ export class CreateOrderDto {
   receiverId: number;
   @IsArray()
   @IsNotEmpty()
-  loadings: Address[];
+  loadings: Operation[];
   @IsArray()
   @IsNotEmpty()
-  unloadings: Address[];
+  unloadings: Operation[];
   @IsArray()
   @IsNotEmpty()
   goods: Parcel[];

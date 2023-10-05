@@ -6,10 +6,9 @@ import {
   OneToOne,
 } from 'typeorm';
 import { BusinessPartner } from 'src/business-partner/entities/business-partner.entity';
-import { Address } from 'src/address/entities/address.entity';
-import { Parcel } from 'src/parcel/entities/parcel.entity';
 import { Vehicle } from 'src/vehicle/entities/vehicle.entity';
 import { User } from 'src/user/entities/user.entity';
+import { Operation } from 'src/operation/entities/operation.entity';
 
 @Entity()
 export class Order {
@@ -22,14 +21,11 @@ export class Order {
   @OneToOne(() => BusinessPartner)
   receiver: BusinessPartner;
 
-  @OneToMany(() => Address, (address) => address.order)
-  loadings: Address[];
+  @OneToMany(() => Operation, (operation) => operation.order)
+  loadings: Operation[];
 
-  @OneToMany(() => Address, (address) => address.order)
-  unloadings: Address[];
-
-  @OneToMany(() => Parcel, (parcel) => parcel.order)
-  goods: Parcel[];
+  @OneToMany(() => Operation, (operation) => operation.order)
+  unloadings: Operation[];
 
   @OneToOne(() => Vehicle)
   vehicle: Vehicle;

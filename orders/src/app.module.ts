@@ -10,6 +10,7 @@ import { ParcelModule } from './parcel/parcel.module';
 import { BusinessPartnerModule } from './business-partner/business-partner.module';
 import { TenantOrigin } from './middleware/tenantOrigin';
 import { JwtModule } from '@nestjs/jwt';
+import { OperationModule } from './operation/operation.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { JwtModule } from '@nestjs/jwt';
     UserModule,
     ParcelModule,
     BusinessPartnerModule,
+    OperationModule,
   ],
   controllers: [],
   providers: [],
