@@ -15,4 +15,6 @@ describe('VehicleService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it.todo('it should check that the database is connected');
 });

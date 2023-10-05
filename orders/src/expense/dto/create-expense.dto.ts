@@ -14,4 +14,7 @@ export class CreateExpenseDto {
   @IsString()
   @Optional()
   invoiceNumber: string;
+  @IsString()
+  @IsNotEmpty()
+  vehicleVin: string;
 }

@@ -77,3 +77,10 @@ export enum BusinessPartnerStatus {
     SUSPENDED = 'SUSPENDED',
     DISPUTE = 'DISPUTE',
 }
+
+export enum OperationType {
+    LOADING = 'LOADING',
+    UNLOADING = 'UNLOADING',
+}
+
+

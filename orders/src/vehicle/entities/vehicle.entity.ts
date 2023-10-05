@@ -23,7 +23,7 @@ export class Vehicle {
   model: string;
 
   @Column()
-  year: string;
+  year: Date;
 
   @Column()
   km: number;
@@ -46,6 +46,9 @@ export class Vehicle {
   @OneToOne(() => Vehicle)
   @JoinColumn()
   trailer: Vehicle;
+
+  @Column()
+  type: string;
 
   @Column({
     type: 'text',
