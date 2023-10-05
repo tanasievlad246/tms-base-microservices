@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { VehicleService } from './vehicle.service';
+import { TenantModule } from 'src/tenant/tenant.module';
+import { ExpenseModule } from 'src/expense/expense.module';
 
 describe('VehicleService', () => {
   let service: VehicleService;
@@ -7,6 +9,7 @@ describe('VehicleService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [VehicleService],
+      imports: [TenantModule, ExpenseModule],
     }).compile();
 
     service = module.get<VehicleService>(VehicleService);

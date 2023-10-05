@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from './../src/app.module';
+import { DataSource } from 'typeorm';
+import { config } from '../typeOrm.config';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -8,6 +10,7 @@ describe('AppController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
+      providers: [{ provide: DataSource, useValue: new DataSource(config) }],
     }).compile();
 
     app = moduleFixture.createNestApplication();
