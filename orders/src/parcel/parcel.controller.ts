@@ -1,25 +1,35 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+} from '@nestjs/common';
 import { ParcelService } from './parcel.service';
 import { CreateParcelDto } from './dto/create-parcel.dto';
 import { UpdateParcelDto } from './dto/update-parcel.dto';
+import { Request } from 'express';
 
 @Controller('parcel')
 export class ParcelController {
   constructor(private readonly parcelService: ParcelService) {}
 
   @Post()
-  create(@Body() createParcelDto: CreateParcelDto) {
-    return this.parcelService.create(createParcelDto);
+  create(@Body() createParcelDto: CreateParcelDto, @Req() req: Request) {
+    return this.parcelService.create(createParcelDto, req.user.tenantId);
   }
 
   @Get()
-  findAll() {
-    return this.parcelService.findAll();
+  findAll(@Req() req: Request) {
+    return this.parcelService.findAll(req.user.tenantId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.parcelService.findOne(+id);
+  findOne(@Param('id') id: string, @Req() req: Request) {
+    return this.parcelService.findOne(+id, req.user.tenantId);
   }
 
   @Patch(':id')
@@ -28,7 +38,7 @@ export class ParcelController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.parcelService.remove(+id);
+  remove(@Param('id') id: string, @Req() req: Request) {
+    return this.parcelService.remove(+id, req.user.tenantId);
   }
 }

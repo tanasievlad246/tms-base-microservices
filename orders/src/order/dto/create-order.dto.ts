@@ -20,7 +20,7 @@ export class CreateOrderDto {
   goods: Parcel[];
   @IsNumber()
   @IsNotEmpty()
-  vehicleId: number;
+  vehicleId: string;
   @IsDate()
   @IsNotEmpty()
   startTime: Date;

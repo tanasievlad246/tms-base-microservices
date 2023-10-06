@@ -10,7 +10,17 @@ describe('AppController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-      providers: [{ provide: DataSource, useValue: new DataSource(config) }],
+      providers: [
+        {
+          provide: DataSource,
+          useFactory: () => {
+            const dataSource = new DataSource(config);
+            dataSource.initialize();
+            dataSource.runMigrations();
+            return dataSource;
+          },
+        },
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();

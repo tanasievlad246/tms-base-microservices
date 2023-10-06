@@ -53,10 +53,15 @@ export class OperationService {
   async update(
     id: number,
     updateOperationDto: UpdateOperationDto,
+    tenantId: string,
   ): Promise<Operation> {
     return await this.dataSource.transaction(async (manager) => {
       const operationRepo: Repository<Operation> =
         manager.getRepository(Operation);
+      await this.tenantService.setCurrentTenantOnRepository(
+        operationRepo,
+        tenantId,
+      );
       const operation: Operation = await operationRepo.findOneBy({ id });
       operationRepo.merge(operation, updateOperationDto);
       return await operationRepo.save(operation);
