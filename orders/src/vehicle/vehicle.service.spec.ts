@@ -5,20 +5,19 @@ import { ExpenseModule } from 'src/expense/expense.module';
 import { TenantService } from 'src/tenant/tenant.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Vehicle } from './entities/vehicle.entity';
-import { databaseConnectionFactory } from 'src/test-utils';
+import { config } from '../../typeOrm.config';
 
 describe('VehicleService', () => {
   let service: VehicleService;
 
   beforeEach(async () => {
-    const dbConfig = await databaseConnectionFactory();
     const module: TestingModule = await Test.createTestingModule({
       providers: [VehicleService, TenantService],
       imports: [
         TenantModule,
         ExpenseModule,
         TypeOrmModule.forFeature([Vehicle]),
-        TypeOrmModule.forRoot(dbConfig),
+        TypeOrmModule.forRoot(config),
       ],
     }).compile();
 

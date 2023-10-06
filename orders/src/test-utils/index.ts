@@ -6,7 +6,6 @@ export const databaseConnectionFactory = async () => {
   try {
     const conn = new DataSource(config);
     await conn.initialize();
-    setTimeout(async () => await conn.runMigrations(), 30000);
     return config;
   } catch (error) {
     console.error(error);
