@@ -53,6 +53,16 @@ export class CreatePolicies1695380474999 implements MigrationInterface {
     );
     await queryRunner.query(`ALTER TABLE "tenants" ENABLE ROW LEVEL SECURITY;`);
     await queryRunner.query(`ALTER TABLE "tenants" FORCE ROW LEVEL SECURITY;`);
+
+    await queryRunner.query(
+      `CREATE POLICY tenant_isolation_policy ON "operation" USING ("tenantId" = current_setting('hermestms.current_tenant')::text);`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "operation" ENABLE ROW LEVEL SECURITY;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "operation" FORCE ROW LEVEL SECURITY;`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

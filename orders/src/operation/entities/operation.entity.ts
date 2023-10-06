@@ -33,4 +33,11 @@ export class Operation {
 
   @ManyToOne(() => Order, (order) => order.id)
   order: Order;
+
+  @Column({
+    type: 'text',
+    default: () => "current_setting('hermestms.current_tenant')::text",
+    nullable: false,
+  })
+  tenantId: string;
 }

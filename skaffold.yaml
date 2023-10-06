@@ -1,10 +1,12 @@
-apiVersion: skaffold/v2alpha3
+apiVersion: skaffold/v2beta29
 kind: Config
 deploy:
   kubectl:
     manifests:
       - ./infra/k8s/*
 build:
+  tagPolicy:
+    gitCommit: {}
   local:
     push: false
   artifacts:
@@ -16,3 +18,16 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+test:
+  - image: vlad246/tms-orders:latest
+    context: orders
+    custom:
+      - command: ./test.sh
+        timeoutSeconds: 60
+        dependencies:
+          paths:
+          -  "*_test.go"
+          -  "test.sh"
+      - command: echo Hello world!!
+        dependencies:
+          command: echo [\"main_test.go\"]

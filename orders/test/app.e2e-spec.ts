@@ -1,25 +1,25 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from './../src/app.module';
-import { DataSource } from 'typeorm';
-import { config } from '../typeOrm.config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-      providers: [
-        {
-          provide: DataSource,
-          useFactory: () => {
-            const dataSource = new DataSource(config);
-            dataSource.initialize();
-            dataSource.runMigrations();
-            return dataSource;
-          },
-        },
+      imports: [
+        AppModule,
+        TypeOrmModule.forRoot({
+          type: 'postgres',
+          host: 'postgres',
+          port: 5432,
+          username: 'hermestms',
+          password: 'hermestmspw',
+          database: 'tms2',
+          entities: [__dirname + '/**/*.entity.{ts,js}'],
+          migrations: ['dist/migrations/*.{ts,js}'],
+        }),
       ],
     }).compile();
 
