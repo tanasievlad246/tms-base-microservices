@@ -13,7 +13,9 @@ export class Vehicle {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   vin: string;
 
   @Column()

@@ -8,8 +8,8 @@ import { TenantService } from 'src/tenant/tenant.service';
 @Injectable()
 export class VehicleService {
   constructor(
-    private readonly dataSource: DataSource,
-    private readonly tenantService: TenantService,
+    readonly dataSource: DataSource,
+    readonly tenantService: TenantService,
   ) {}
 
   async create(createVehicleDto: CreateVehicleDto, tenantId: string) {
@@ -22,8 +22,8 @@ export class VehicleService {
   }
 
   async assignTrailerToVehicle(
-    trailerId: string,
     vehicleId: string,
+    trailerId: string,
     tenantId: string,
   ) {
     return await this.dataSource.transaction(async (manager) => {
@@ -48,12 +48,12 @@ export class VehicleService {
     });
   }
 
-  async findAllByIds(ids: number[], tenantId: string) {
+  async findAllByIds(ids: string[], tenantId: string) {
     return await this.dataSource.transaction(async (manager) => {
       const repo: Repository<Vehicle> = manager.getRepository(Vehicle);
       await this.tenantService.setCurrentTenantOnRepository(repo, tenantId);
       return await repo.findBy({
-        id: In(ids),
+        vin: In(ids),
       });
     });
   }
@@ -84,7 +84,9 @@ export class VehicleService {
     return await this.dataSource.transaction(async (manager) => {
       const repo: Repository<Vehicle> = manager.getRepository(Vehicle);
       await this.tenantService.setCurrentTenantOnRepository(repo, tenantId);
-      return await repo.delete(vin);
+      return await repo.delete({
+        vin,
+      });
     });
   }
 }

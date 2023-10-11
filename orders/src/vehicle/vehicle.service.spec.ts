@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { testConfig } from '../../typeOrm.config';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { Vehicle } from './entities/vehicle.entity';
+import { In } from 'typeorm';
 
 describe('VehicleService', () => {
   let service: VehicleService;
@@ -23,6 +24,24 @@ describe('VehicleService', () => {
     }).compile();
 
     service = module.get<VehicleService>(VehicleService);
+
+    // drop all rows from vehicle table before each test
+    // await service.dataSource.query('DELETE FROM vehicle;');
+    await service.dataSource.transaction(async (manager) => {
+      const repo = manager.getRepository(Vehicle);
+      service.tenantService.setCurrentTenantOnRepository(repo, '1');
+      await repo.delete({
+        vin: In(['123abc', '123cde']),
+      });
+    });
+
+    await service.dataSource.transaction(async (manager) => {
+      const repo = manager.getRepository(Vehicle);
+      service.tenantService.setCurrentTenantOnRepository(repo, '2');
+      await repo.delete({
+        vin: In(['123abc', '123cde']),
+      });
+    });
   });
 
   it('should be defined', () => {
@@ -60,17 +79,195 @@ describe('VehicleService', () => {
     expect(createdVehicle.type).toEqual(createVehicleDto.type);
   });
 
-  it.todo('it assigns a trailer to a vehicle');
+  it('it assigns a trailer to a vehicle', async () => {
+    const trailerDto: CreateVehicleDto = {
+      vin: '123abc',
+      make: 'Cargobull',
+      model: '355',
+      year: new Date(),
+      km: 0,
+      color: 'white',
+      registration: '123abc',
+      registrationDate: new Date(),
+      country: 'Canada',
+      type: 'trailer',
+    };
 
-  it.todo('it finds all vehicles for a tenant');
+    const truckDto: CreateVehicleDto = {
+      vin: '123cde',
+      make: 'Ford',
+      model: 'F150',
+      year: new Date(),
+      km: 0,
+      color: 'red',
+      registration: '123abc',
+      registrationDate: new Date(),
+      country: 'Canada',
+      type: 'truck',
+    };
 
-  it.todo('it finds multiple vehicles by ids for a tenant');
+    const trailer: Vehicle = await service.create(trailerDto, '1');
+    const truck: Vehicle = await service.create(truckDto, '1');
 
-  it.todo('it finds one vehicle by id for a tenant');
+    const updatedTruck: Vehicle = await service.assignTrailerToVehicle(
+      truck.vin,
+      trailer.vin,
+      '1',
+    );
 
-  it.todo(
-    'it updates a vehicle by id for a tenant and returns the updated vehicle',
-  );
+    console.log(trailer.vin);
+    console.log(truck.vin);
 
-  it.todo('removes a vehicle by id for a tenant');
+    expect(updatedTruck.trailer).toBeDefined();
+    expect(updatedTruck.trailer.vin).toEqual(trailer.vin);
+  });
+
+  it('it finds all vehicles for a tenant', async () => {
+    await service.create(
+      {
+        vin: '123abc',
+        make: 'Cargobull',
+        model: '355',
+        year: new Date(),
+        km: 0,
+        color: 'white',
+        registration: '123abc',
+        registrationDate: new Date(),
+        country: 'Canada',
+        type: 'trailer',
+      },
+      '2',
+    );
+
+    const vehicles: Vehicle[] = await service.findAll('1');
+    const t2Vehicles: Vehicle[] = await service.findAll('2');
+
+    expect(vehicles).toBeDefined();
+    expect(vehicles.length).toEqual(0);
+    expect(t2Vehicles).toBeDefined();
+    expect(t2Vehicles.length).toEqual(1);
+  });
+
+  it('it finds multiple vehicles by ids for a tenant', async () => {
+    const vehicle1: Vehicle = await service.create(
+      {
+        vin: '123abc',
+        make: 'Cargobull',
+        model: '355',
+        year: new Date(),
+        km: 0,
+        color: 'white',
+        registration: '123abc',
+        registrationDate: new Date(),
+        country: 'Canada',
+        type: 'trailer',
+      },
+      '1',
+    );
+
+    const vehicle2: Vehicle = await service.create(
+      {
+        vin: '123cde',
+        make: 'Cargobull',
+        model: '355',
+        year: new Date(),
+        km: 0,
+        color: 'white',
+        registration: '123abc',
+        registrationDate: new Date(),
+        country: 'Canada',
+        type: 'trailer',
+      },
+      '1',
+    );
+
+    const vehicles = await service.findAllByIds(['123abc', '123cde'], '1');
+
+    expect(vehicles).toBeDefined();
+    expect(vehicles.length).toEqual(2);
+    expect(vehicles[0].vin).toEqual(vehicle1.vin);
+    expect(vehicles[1].vin).toEqual(vehicle2.vin);
+  });
+
+  it('it finds one vehicle by id for a tenant', async () => {
+    const vehicle1: Vehicle = await service.create(
+      {
+        vin: '123abc',
+        make: 'Cargobull',
+        model: '355',
+        year: new Date(),
+        km: 0,
+        color: 'white',
+        registration: '123abc',
+        registrationDate: new Date(),
+        country: 'Canada',
+        type: 'trailer',
+      },
+      '1',
+    );
+
+    const vehicle = await service.findOne('123abc', '1');
+
+    expect(vehicle).toBeDefined();
+    expect(vehicle.vin).toEqual(vehicle1.vin);
+  });
+
+  it('it updates a vehicle by id for a tenant and returns the updated vehicle', async () => {
+    const vehicle1: Vehicle = await service.create(
+      {
+        vin: '123abc',
+        make: 'Cargobull',
+        model: '355',
+        year: new Date(),
+        km: 0,
+        color: 'white',
+        registration: '123abc',
+        registrationDate: new Date(),
+        country: 'Canada',
+        type: 'trailer',
+      },
+      '1',
+    );
+
+    vehicle1.make = 'Ford';
+
+    const updatedVehicle: Vehicle = await service.update(
+      '123abc',
+      vehicle1,
+      '1',
+    );
+
+    expect(updatedVehicle).toBeDefined();
+    expect(updatedVehicle.vin).toEqual(vehicle1.vin);
+    expect(updatedVehicle.make).toEqual('Ford');
+  });
+
+  it('removes a vehicle by id for a tenant', async () => {
+    await service.create(
+      {
+        vin: '123abc',
+        make: 'Cargobull',
+        model: '355',
+        year: new Date(),
+        km: 0,
+        color: 'white',
+        registration: '123abc',
+        registrationDate: new Date(),
+        country: 'Canada',
+        type: 'trailer',
+      },
+      '1',
+    );
+
+    const vehicles = await service.findAll('1');
+
+    expect(vehicles).toBeDefined();
+    expect(vehicles.length).toEqual(1);
+
+    await service.remove('123abc', '1');
+
+    const vehiclesAfterDelete = await service.findOne('123abc', '1');
+    console.log(vehiclesAfterDelete);
+    expect(vehiclesAfterDelete).toBeNull();
+  });
 });

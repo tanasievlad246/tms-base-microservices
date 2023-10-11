@@ -19,7 +19,7 @@ export const testConfig: DataSourceOptions = {
   username: 'hermestms',
   password: 'hermestmspw',
   database: 'tms2',
-  logging: true,
+  // logging: true,
   entities: ['src/**/*.entity.ts'],
   migrations: ['./migrations/*.{ts,js}'],
 };
