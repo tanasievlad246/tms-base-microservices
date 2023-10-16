@@ -1,14 +1,12 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Req, UseGuards } from '@nestjs/common';
 import { TenantService } from './tenant.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
-import { DataSource } from 'typeorm';
+import { Request } from 'express';
+import { AuthGuardGuard } from 'src/auth-guard/auth-guard.guard';
 
 @Controller('tenant')
 export class TenantController {
-  constructor(
-    private readonly tenantService: TenantService,
-    private readonly dataSource: DataSource,
-  ) {}
+  constructor(private readonly tenantService: TenantService) {}
 
   @Post()
   async create(@Body() createTenantDto: CreateTenantDto) {
@@ -26,10 +24,12 @@ export class TenantController {
   }
 
   @Get()
-  async findAll(@Body() body: { tenantName: string }) {
+  @UseGuards(AuthGuardGuard)
+  async findOne(@Req() req: Request) {
     try {
+      const tenant = await this.tenantService.findOne(req.user.tenantId);
       return {
-        tenants: await this.tenantService.findAll(body.tenantName),
+        tenant,
         success: true,
       };
     } catch (error) {

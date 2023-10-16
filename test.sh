@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 # run test
-cd orders && npm run test
+(cd ./orders && npm run test)

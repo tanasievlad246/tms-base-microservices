@@ -4,7 +4,7 @@ import { TenantModule } from 'src/tenant/tenant.module';
 import { ExpenseModule } from 'src/expense/expense.module';
 import { TenantService } from 'src/tenant/tenant.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { testConfig } from '../../typeOrm.config';
+import { config } from '../../typeOrm.config';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { Vehicle } from './entities/vehicle.entity';
 import { In } from 'typeorm';
@@ -19,7 +19,7 @@ describe('VehicleService', () => {
         TenantModule,
         ExpenseModule,
         TypeOrmModule.forFeature([Vehicle]),
-        TypeOrmModule.forRoot(testConfig),
+        TypeOrmModule.forRoot(config),
       ],
     }).compile();
 

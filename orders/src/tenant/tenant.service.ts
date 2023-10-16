@@ -8,6 +8,18 @@ export class TenantService {
   constructor(private readonly dataSource: DataSource) {}
   async create(createTenantDto: CreateTenantDto) {
     try {
+      const ForbiddenTenantNames = [
+        'public',
+        'hermestms',
+        'tenant1',
+        'tenant2',
+      ];
+      if (ForbiddenTenantNames.includes(createTenantDto.subdomain)) {
+        throw new Error(
+          'This tenant name is not allowed. Please try another one.',
+        );
+      }
+
       return await this.dataSource.transaction(async (manager) => {
         const repo = manager.getRepository(Tenant);
         await this.setCurrentTenantOnRepository(
@@ -45,6 +57,20 @@ export class TenantService {
       [],
     );
     console.log('after set query runner', r);
+  }
+
+  async findOne(tenantId: string) {
+    try {
+      return this.dataSource.transaction(async (manager) => {
+        const repo = manager.getRepository(Tenant);
+        await this.setCurrentTenantOnRepository(repo, tenantId);
+        const tenant = await repo.findOneBy({ subdomain: tenantId });
+        return tenant;
+      });
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
   }
 
   async findAll(tenantName: string) {

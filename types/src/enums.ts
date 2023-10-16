@@ -82,5 +82,3 @@ export enum OperationType {
     LOADING = 'LOADING',
     UNLOADING = 'UNLOADING',
 }
-
-

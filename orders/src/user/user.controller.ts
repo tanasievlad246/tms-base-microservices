@@ -65,6 +65,7 @@ export class UserController {
   }
 
   @Post('signout')
+  @UseGuards(AuthGuardGuard)
   async signOut(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('jwt').send();
   }

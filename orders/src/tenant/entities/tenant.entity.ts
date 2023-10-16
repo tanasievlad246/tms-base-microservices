@@ -11,7 +11,9 @@ export class Tenant {
   @Column()
   name: string;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   subdomain: string;
 
   @Column()

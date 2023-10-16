@@ -18,16 +18,9 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-test:
-  - image: vlad246/tms-orders:latest
-    context: orders
-    custom:
-      - command: ./test.sh
-        timeoutSeconds: 60
-        dependencies:
-          paths:
-          -  "*_test.go"
-          -  "test.sh"
-      - command: echo Hello world!!
-        dependencies:
-          command: echo [\"main_test.go\"]
+# TODO: Create a way to test on the database on testing the services
+# test:
+#   - image: vlad246/tms-orders
+#     context: orders
+#     custom:
+#       - command: npm run test

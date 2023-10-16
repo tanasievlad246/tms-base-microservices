@@ -1,20 +1,18 @@
 import { Expense } from 'src/expense/entities/expense.entity';
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   OneToMany,
   OneToOne,
   JoinColumn,
+  PrimaryColumn,
 } from 'typeorm';
 
 @Entity()
 export class Vehicle {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({
+  @PrimaryColumn({
     unique: true,
+    nullable: false,
   })
   vin: string;
 
@@ -33,7 +31,10 @@ export class Vehicle {
   @Column()
   color: string;
 
-  @Column()
+  @Column({
+    unique: true,
+    nullable: false,
+  })
   registration: string;
 
   @Column()
