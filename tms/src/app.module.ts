@@ -27,7 +27,7 @@ import { OperationModule } from './operation/operation.module';
     }),
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET,
+      secret: process.env.JWT_KEY,
       signOptions: { expiresIn: '1d' },
     }),
     AddressModule,
