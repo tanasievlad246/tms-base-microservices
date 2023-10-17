@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tms-dashboard-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tms-dashboard
+  template:
+    metadata:
+      labels:
+        app: tms-dashboard
+    spec:
+      containers:
+        - name: tms-dashboard
+          image: vlad246/tms-dashboard
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tms-dashboard-srv
+spec:
+  selector:
+    app: tms-dashboard
+  ports:
+    - name: tms-dashboard
+      protocol: TCP
+      port: 5173
+      targetPort: 5173

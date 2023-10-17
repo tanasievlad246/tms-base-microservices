@@ -17,3 +17,10 @@ spec:
                 name: tms-orders-srv
                 port:
                   number: 3000
+          - path: '/?(.*)'
+            pathType: Prefix
+            backend:
+              service:
+                name: tms-dashboard-srv
+                port:
+                  number: 5173
