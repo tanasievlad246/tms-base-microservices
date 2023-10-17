@@ -1,6 +1,7 @@
-import { IsArray, IsDate, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsArray, IsDate, IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
 import { Parcel } from 'src/parcel/entities/parcel.entity';
 import { Operation } from 'src/operation/entities/operation.entity';
+import { BillingUnits } from 'src/types/enums';
 
 export class CreateOrderDto {
   @IsNumber()
@@ -35,5 +36,6 @@ export class CreateOrderDto {
   distance: number;
   @IsNumber()
   @IsNotEmpty()
-  billingUnit: string;
+  @IsEnum(BillingUnits)
+  billingUnit: BillingUnits;
 }

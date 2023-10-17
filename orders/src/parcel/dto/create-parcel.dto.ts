@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import { ParcelType } from 'src/types/enums';
 
 export class CreateParcelDto {
   @IsNumber()
@@ -23,5 +24,6 @@ export class CreateParcelDto {
   qty: number;
   @IsNotEmpty()
   @IsString()
-  type: string;
+  @IsEnum(ParcelType)
+  type: ParcelType;
 }

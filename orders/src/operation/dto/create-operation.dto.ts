@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsObject,
+  IsString,
 } from 'class-validator';
 import { Address } from 'src/address/entities/address.entity';
 import { Parcel } from 'src/parcel/entities/parcel.entity';
@@ -22,6 +23,7 @@ export class CreateOperationDto {
   endTime: Date;
   @IsEnum(OperationType)
   @IsNotEmpty()
+  @IsString()
   type: OperationType;
   @IsArray()
   @IsNotEmpty()

@@ -5,6 +5,7 @@ import { DataSource, Repository } from 'typeorm';
 import { TenantService } from 'src/tenant/tenant.service';
 import { Expense } from './entities/expense.entity';
 import { Vehicle } from 'src/vehicle/entities/vehicle.entity';
+import { ExpenseStatus } from 'src/types/enums';
 
 @Injectable()
 export class ExpenseService {
@@ -18,6 +19,7 @@ export class ExpenseService {
       const repo: Repository<Expense> = manager.getRepository(Expense);
       const vehicleRepo: Repository<Vehicle> = manager.getRepository(Vehicle);
       const expense = repo.create(createExpenseDto);
+      expense.status = ExpenseStatus.PENDING;
       expense.vehicle = await vehicleRepo.findOneBy({
         vin: createExpenseDto.vehicleVin,
       });

@@ -1,3 +1,4 @@
+import { SubscriptionType } from 'src/types/enums';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity({
@@ -19,8 +20,10 @@ export class Tenant {
   @Column()
   subscribed: boolean;
 
-  @Column()
-  subscription: string;
+  @Column({
+    enum: SubscriptionType,
+  })
+  subscription: SubscriptionType;
 
   @Column({
     default: () => 'CURRENT_TIMESTAMP',

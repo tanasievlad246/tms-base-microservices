@@ -1,10 +1,12 @@
 import {
   IsAlphanumeric,
   IsDate,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsString,
 } from 'class-validator';
+import { VehicleType } from 'src/types/enums';
 
 export class CreateVehicleDto {
   @IsAlphanumeric()
@@ -38,5 +40,6 @@ export class CreateVehicleDto {
   country: string;
   @IsString()
   @IsNotEmpty()
+  @IsEnum(VehicleType)
   type: string;
 }

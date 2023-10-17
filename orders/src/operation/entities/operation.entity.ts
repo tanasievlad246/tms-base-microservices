@@ -25,7 +25,9 @@ export class Operation {
   @Column()
   endTime: Date;
 
-  @Column()
+  @Column({
+    enum: OperationType,
+  })
   type: OperationType;
 
   @OneToMany(() => Parcel, (parcel) => parcel.operation)

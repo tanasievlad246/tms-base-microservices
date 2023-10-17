@@ -1,3 +1,4 @@
+import { ExpenseStatus } from 'src/types/enums';
 import { Vehicle } from 'src/vehicle/entities/vehicle.entity';
 import { PrimaryGeneratedColumn, Entity, Column, ManyToOne } from 'typeorm';
 
@@ -18,8 +19,10 @@ export class Expense {
   @Column()
   invoiceNumber: string;
 
-  @Column()
-  status: string;
+  @Column({
+    enum: ExpenseStatus,
+  })
+  status: ExpenseStatus;
 
   @ManyToOne(() => Vehicle, (vehicle) => vehicle.expenses)
   vehicle: Vehicle;

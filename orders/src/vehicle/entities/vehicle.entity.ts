@@ -7,6 +7,7 @@ import {
   JoinColumn,
   PrimaryColumn,
 } from 'typeorm';
+import { VehicleType } from 'src/types/enums';
 
 @Entity()
 export class Vehicle {
@@ -50,8 +51,10 @@ export class Vehicle {
   @JoinColumn()
   trailer: Vehicle;
 
-  @Column()
-  type: string;
+  @Column({
+    enum: VehicleType,
+  })
+  type: VehicleType;
 
   @Column({
     type: 'text',

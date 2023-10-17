@@ -5,6 +5,7 @@ import { DataSource, Repository } from 'typeorm';
 import { TenantService } from 'src/tenant/tenant.service';
 import { BusinessPartner } from './entities/business-partner.entity';
 import { Address } from 'src/address/entities/address.entity';
+import { BusinessPartnerStatus } from 'src/types/enums';
 
 @Injectable()
 export class BusinessPartnerService {
@@ -33,6 +34,7 @@ export class BusinessPartnerService {
 
       const businessPartner = repo.create(createBusinessPartnerDto);
       businessPartner.address = address;
+      businessPartner.status = BusinessPartnerStatus.ACTIVE;
 
       return await repo.save(businessPartner);
     });

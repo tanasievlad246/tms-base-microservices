@@ -1,6 +1,6 @@
 {
   "name": "@tmscommons/types",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
@@ -15,5 +15,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "del": "^7.1.0",
+    "del-cli": "^5.1.0"
+  }
 }

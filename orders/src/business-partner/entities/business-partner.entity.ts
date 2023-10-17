@@ -1,4 +1,5 @@
 import { Address } from 'src/address/entities/address.entity';
+import { BusinessPartnerStatus, BusinessPartnerType } from 'src/types/enums';
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
 
 @Entity()
@@ -12,8 +13,10 @@ export class BusinessPartner {
   @OneToOne(() => Address)
   address: Address;
 
-  @Column()
-  type: string;
+  @Column({
+    enum: BusinessPartnerType,
+  })
+  type: BusinessPartnerType;
 
   @Column()
   email: string;
@@ -33,8 +36,10 @@ export class BusinessPartner {
   @Column()
   createdAt: Date;
 
-  @Column()
-  status: string;
+  @Column({
+    enum: BusinessPartnerStatus,
+  })
+  status: BusinessPartnerStatus;
 
   @Column({
     type: 'text',

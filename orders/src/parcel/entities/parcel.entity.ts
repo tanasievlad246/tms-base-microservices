@@ -1,4 +1,5 @@
 import { Operation } from 'src/operation/entities/operation.entity';
+import { ParcelType } from 'src/types/enums';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()
@@ -21,8 +22,10 @@ export class Parcel {
   @Column()
   qty: number;
 
-  @Column()
-  type: string;
+  @Column({
+    enum: ParcelType,
+  })
+  type: ParcelType;
 
   @ManyToOne(() => Operation, (operation) => operation.parcels)
   operation: Operation;
