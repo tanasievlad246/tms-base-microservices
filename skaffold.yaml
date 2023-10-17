@@ -19,8 +19,8 @@ build:
           - src: 'src/**/*.ts'
             dest: .
 # TODO: Create a way to test on the database on testing the services
-# test:
-#   - image: vlad246/tms-orders
-#     context: orders
-#     custom:
-#       - command: npm run test
+test:
+  - image: vlad246/tms-orders
+    context: orders
+    custom:
+      - command: ./test.sh
