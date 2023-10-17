@@ -41,5 +41,5 @@ export class CreateVehicleDto {
   @IsString()
   @IsNotEmpty()
   @IsEnum(VehicleType)
-  type: string;
+  type: VehicleType;
 }
