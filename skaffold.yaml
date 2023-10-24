@@ -18,6 +18,14 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: vlad246/tms-dashboard
+      context: tms-dashboard
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
 # TODO: Create a way to test on the database on testing the services
 # test:
 #   - image: vlad246/tms-orders
