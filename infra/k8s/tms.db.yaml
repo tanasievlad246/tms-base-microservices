@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql-pod
+  labels:
+    app: mysql
+spec:
+  containers:
+  - name: mysql
+    image: mysql:8
+    env:
+      - name: MYSQL_ROOT_PASSWORD
+        value: "password"
+      - name: MYSQL_DATABASE
+        value: "tms"
+    ports:
+      - containerPort: 3306
+    volumeMounts:
+      - name: mysql-persistent-storage
+        mountPath: /var/lib/mysql
+      - name: mysql-init-scripts
+        mountPath: /docker-entrypoint-initdb.d
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-scripts
+data:
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS tms;
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-tms-srv
+spec:
+  selector:
+    app: mysql
+  ports:
+    - name: mysql-tms-srv
+      protocol: TCP
+      port: 5432
+      targetPort: 5432

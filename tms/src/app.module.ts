@@ -14,17 +14,6 @@ import { OperationModule } from './operation/operation.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'postgres',
-      port: 5432,
-      username: 'hermestms',
-      password: 'hermestmspw',
-      database: 'tms2',
-      logging: true,
-      entities: ['dist/**/*.entity.{ts,js}'],
-      migrations: ['dist/migrations/*.{ts,js}'],
-    }),
     JwtModule.register({
       global: true,
       secret: process.env.JWT_KEY,
