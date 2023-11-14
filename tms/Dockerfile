@@ -2,7 +2,7 @@ FROM node:alpine
 
 WORKDIR /app
 COPY package.json .
-RUN npm install --omit=dev
+RUN npm install
 RUN npm i --save-dev @types/bcrypt
 COPY . .
 # Run migrations, after 120 seconds, to give the database time to start
